@@ -234,8 +234,6 @@ void printVersion()
     glGetIntegerv(GL_MAJOR_VERSION, &major);
     glGetIntegerv(GL_MINOR_VERSION, &minor);
 
-    std::cout <<
-
     printf("GL Vendor           : %s\n", vendor);
     printf("GL Renderer         : %s\n", renderer);
     printf("GL Version (string) : %s\n", version);
