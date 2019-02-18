@@ -11,6 +11,7 @@ const int FRAMES_PER_SECOND = 60;
 SDL_Window *window;
 
 SDL_GLContext maincontext;
+GLuint vaoHandle;
 
 void drawCube(float xrf, float yrf, float zrf);
 bool SetOpenGLAttributes();
@@ -43,7 +44,7 @@ bool Init()
 
     int loaded = ogl_LoadFunctions();
     if(loaded == ogl_LOAD_FAILED) {
-        std::cout << "opengl func loading failed" << std::endl;
+        std::cout << "OpenGL func loading failed" << std::endl;
         return false;
     }
 
@@ -92,6 +93,41 @@ bool Init()
         glUseProgram(programHandle);
     }
 
+    float positionData[] = {
+            -0.8f, -0.8f, 0.0f,
+            0.8f, -0.8f, 0.0f,
+            0.0f, 0.8f, 0.0f
+    };
+
+    float colorData[] = {
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f
+    };
+
+    GLuint vboHandles[2];
+    glGenBuffers(2, vboHandles);
+    GLuint positionBufferHandle = vboHandles[0];
+    GLuint colorBufferHandle = vboHandles[1];
+
+    glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positionData, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), colorData, GL_STATIC_DRAW);
+
+    glGenVertexArrays(1, &vaoHandle);
+    glBindVertexArray(vaoHandle);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
     return true;
 }
 
@@ -99,7 +135,7 @@ bool SetOpenGLAttributes()
 {
     // Set our OpenGL version.
     // SDL_GL_CONTEXT_CORE gives us only the newer version, deprecated functions are disabled
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     /*
     // 3.2 is part of the modern versions of OpenGL, but most video cards whould be able to run it
@@ -110,10 +146,6 @@ bool SetOpenGLAttributes()
     // Turn on double buffering with a 24bit Z buffer.
     // You may need to change this to 16 or 32 for your system
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 
     return true;
 }
@@ -138,10 +170,12 @@ int main(int argc, char ** argv) {
         return -1;
 
     printVersion();
+    /*
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClearDepth(1.0);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
+     */
     //glShadeModel(GL_SMOOTH);
     //glMatrixMode(GL_PROJECTION);
     //glLoadIdentity();
@@ -156,12 +190,6 @@ void Run()
 {
     Uint32 start;
     char running = 1;
-    float xrf = 0, yrf = 0, zrf = 0;
-    glm::vec4 position = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    glm::mat4 view = glm::lookAt(glm::vec3(0.0, 0.0, 5.0),
-            glm::vec3(0.0, 0.0, 0.0),
-            glm::vec3(0.0, 1.0, 0.0));
-
     while(running != 0)
     {
         start = SDL_GetTicks();
@@ -172,13 +200,9 @@ void Run()
             }
         }
 
-        xrf -= 0.5;
-        yrf -= 0.5;
-        zrf -= 0.5;
+        glBindVertexArray(vaoHandle);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        //drawCube(xrf, yrf, zrf);
-
-        glFlush();
         SDL_GL_SwapWindow(window);
 
         if(1000/FRAMES_PER_SECOND > SDL_GetTicks() - start)
