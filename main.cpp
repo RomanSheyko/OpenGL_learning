@@ -19,7 +19,7 @@ void CheckSDLError(int line);
 void printVersion();
 void Run();
 void Cleanup();
-bool loadShader(const char *path, GLenum shader_type);
+GLuint loadShader(const char *path, GLenum shader_type);
 GLchar* loadShaderAsString(const char *path);
 
 
@@ -50,13 +50,47 @@ bool Init()
     int num_failed = loaded - ogl_LOAD_SUCCEEDED;
     std::cout << "Number of functions that failed to load: " << num_failed << std::endl;
 
-    printVersion();
-
     SetOpenGLAttributes();
 
     SDL_GL_SetSwapInterval(1);
 
-    loadShader("../basic.vert", GL_VERTEX_SHADER);
+    GLuint vertShader = loadShader("../basic.vert", GL_VERTEX_SHADER);
+    GLuint fragShader = loadShader("../base.frag", GL_FRAGMENT_SHADER);
+
+    GLuint programHandle = glCreateProgram();
+    if(programHandle == 0)
+    {
+        fprintf(stderr, "Error creating program object.\n");
+        exit(1);
+    }
+
+    glAttachShader(programHandle, vertShader);
+    glAttachShader(programHandle, fragShader);
+
+    //Linking
+    glLinkProgram(programHandle);
+
+    //Checking
+    GLint status;
+    glGetProgramiv(programHandle, GL_LINK_STATUS, &status);
+    if(status ==GL_FALSE)
+    {
+        fprintf(stderr, "Failed to link shader program!\n");
+
+        GLint logLen;
+        glGetProgramiv(programHandle, GL_INFO_LOG_LENGTH, &logLen);
+        if(logLen > 0)
+        {
+            char *log = new char[logLen];
+            GLsizei written;
+            glGetProgramInfoLog(programHandle, logLen, &written, log);
+            fprintf(stderr, "Program log: \n%s", log);
+            delete [] log;
+        }
+    }
+    else {
+        glUseProgram(programHandle);
+    }
 
     return true;
 }
@@ -103,6 +137,7 @@ int main(int argc, char ** argv) {
     if (!Init())
         return -1;
 
+    printVersion();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClearDepth(1.0);
     glDepthFunc(GL_LESS);
@@ -153,7 +188,6 @@ void Run()
 
 GLchar* loadShaderAsString(const char *path)
 {
-    std::cout << "loading Shader..." << std::endl;
     const int READ_CONST = 255;
     bool memory_flag = false;
     FILE *f = fopen(path, "r");
@@ -184,7 +218,7 @@ GLchar* loadShaderAsString(const char *path)
     return (GLchar*)shaderCode;
 }
 
-bool loadShader(const char *path, GLenum type)
+GLuint loadShader(const char *path, GLenum type)
 {
     GLuint shader = glCreateShader(type);
     if(shader == 0)
@@ -223,7 +257,9 @@ bool loadShader(const char *path, GLenum type)
         }
     }
 
-    return true;
+    delete [] shaderCode;
+
+    return shader;
 }
 
 void CheckSDLError(int line = -1)
