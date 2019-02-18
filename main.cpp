@@ -116,51 +116,51 @@ void drawCube(float xrf, float yrf, float zrf){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -7.0f);	// Сдвинуть вглубь экрана
+    glTranslatef(0.0f, 0.0f, -7.0f);
 
-    glRotatef(xrf, 1.0f, 0.0f, 0.0f);	// Вращение куба по X, Y, Z
-    glRotatef(yrf, 0.0f, 1.0f, 0.0f);	// Вращение куба по X, Y, Z
-    glRotatef(zrf, 0.0f, 0.0f, 1.0f);	// Вращение куба по X, Y, Z
+    glRotatef(xrf, 1.0f, 0.0f, 0.0f);
+    glRotatef(yrf, 0.0f, 1.0f, 0.0f);
+    glRotatef(zrf, 0.0f, 0.0f, 1.0f);
 
-    glBegin(GL_QUADS);		// Рисуем куб
+    glBegin(GL_QUADS);
 
-    glColor3f(0.0f, 1.0f, 0.0f);		// Синяя сторона (Верхняя)
-    glVertex3f( 1.0f, 1.0f, -1.0f);		// Верхний правый угол квадрата
-    glVertex3f(-1.0f, 1.0f, -1.0f);		// Верхний левый
-    glVertex3f(-1.0f, 1.0f,  1.0f);		// Нижний левый
-    glVertex3f( 1.0f, 1.0f,  1.0f);		// Нижний правый
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f( 1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f,  1.0f);
+    glVertex3f( 1.0f, 1.0f,  1.0f);
 
-    glColor3f(1.0f, 0.5f, 0.0f);		// Оранжевая сторона (Нижняя)
-    glVertex3f( 1.0f, -1.0f,  1.0f);	// Верхний правый угол квадрата
-    glVertex3f(-1.0f, -1.0f,  1.0f);	// Верхний левый
-    glVertex3f(-1.0f, -1.0f, -1.0f);	// Нижний левый
-    glVertex3f( 1.0f, -1.0f, -1.0f);	// Нижний правый
+    glColor3f(1.0f, 0.5f, 0.0f);
+    glVertex3f( 1.0f, -1.0f,  1.0f);
+    glVertex3f(-1.0f, -1.0f,  1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f( 1.0f, -1.0f, -1.0f);
 
-    glColor3f(1.0f, 0.0f, 0.0f);		// Красная сторона (Передняя)
-    glVertex3f( 1.0f,  1.0f, 1.0f);		// Верхний правый угол квадрата
-    glVertex3f(-1.0f,  1.0f, 1.0f);		// Верхний левый
-    glVertex3f(-1.0f, -1.0f, 1.0f);		// Нижний левый
-    glVertex3f( 1.0f, -1.0f, 1.0f);		// Нижний правый
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f( 1.0f,  1.0f, 1.0f);
+    glVertex3f(-1.0f,  1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f( 1.0f, -1.0f, 1.0f);
 
-    glColor3f(1.0f,1.0f,0.0f);			// Желтая сторона (Задняя)
-    glVertex3f( 1.0f, -1.0f, -1.0f);	// Верхний правый угол квадрата
-    glVertex3f(-1.0f, -1.0f, -1.0f);	// Верхний левый
-    glVertex3f(-1.0f,  1.0f, -1.0f);	// Нижний левый
-    glVertex3f( 1.0f,  1.0f, -1.0f);	// Нижний правый
+    glColor3f(1.0f,1.0f,0.0f);
+    glVertex3f( 1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f,  1.0f, -1.0f);
+    glVertex3f( 1.0f,  1.0f, -1.0f);
 
-    glColor3f(0.0f,0.0f,1.0f);			// Синяя сторона (Левая)
-    glVertex3f(-1.0f,  1.0f,  1.0f);	// Верхний правый угол квадрата
-    glVertex3f(-1.0f,  1.0f, -1.0f);	// Верхний левый
-    glVertex3f(-1.0f, -1.0f, -1.0f);	// Нижний левый
-    glVertex3f(-1.0f, -1.0f,  1.0f);	// Нижний правый
+    glColor3f(0.0f,0.0f,1.0f);
+    glVertex3f(-1.0f,  1.0f,  1.0f);
+    glVertex3f(-1.0f,  1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f,  1.0f);
 
-    glColor3f(1.0f,0.0f,1.0f);			// Фиолетовая сторона (Правая)
-    glVertex3f( 1.0f,  1.0f, -1.0f);	// Верхний правый угол квадрата
-    glVertex3f( 1.0f,  1.0f,  1.0f);	// Верхний левый
-    glVertex3f( 1.0f, -1.0f,  1.0f);	// Нижний левый
-    glVertex3f( 1.0f, -1.0f, -1.0f);	// Нижний правый
+    glColor3f(1.0f,0.0f,1.0f);
+    glVertex3f( 1.0f,  1.0f, -1.0f);
+    glVertex3f( 1.0f,  1.0f,  1.0f);
+    glVertex3f( 1.0f, -1.0f,  1.0f);
+    glVertex3f( 1.0f, -1.0f, -1.0f);
 
-    glEnd();	// Закончили квадраты
+    glEnd();
 
 }*/
 
