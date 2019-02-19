@@ -4,6 +4,9 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+using glm::mat4;
+using glm::vec3;
+
 const int width = 640;
 const int height = 480;
 const int FRAMES_PER_SECOND = 60;
@@ -12,6 +15,7 @@ SDL_Window *window;
 
 SDL_GLContext maincontext;
 GLuint vaoHandle;
+GLuint programHandle;
 
 void drawCube(float xrf, float yrf, float zrf);
 bool SetOpenGLAttributes();
@@ -58,7 +62,7 @@ bool Init()
     GLuint vertShader = loadShader("../basic.vert", GL_VERTEX_SHADER);
     GLuint fragShader = loadShader("../base.frag", GL_FRAGMENT_SHADER);
 
-    GLuint programHandle = glCreateProgram();
+    programHandle = glCreateProgram();
     if(programHandle == 0)
     {
         fprintf(stderr, "Error creating program object.\n");
@@ -190,6 +194,7 @@ void Run()
 {
     Uint32 start;
     char running = 1;
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     while(running != 0)
     {
         start = SDL_GetTicks();
@@ -198,6 +203,16 @@ void Run()
             if(eventListener(e) == 0) {
                 running = 0;
             }
+        }
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        mat4 rotationMatrix = glm::rotate(mat4(1.0f), 0.3f, vec3(0.0f, 0.0f, 1.0f));
+
+        GLint location = glGetUniformLocation(programHandle, "RotationMatrix");
+
+        if(location >= 0)
+        {
+            glUniformMatrix4fv(location, 1, GL_FALSE, &rotationMatrix[0][0]);
         }
 
         glBindVertexArray(vaoHandle);
